@@ -22,7 +22,7 @@ The VA Lighthouse API is a way for Local Governments and Veteran Services Office
 
 We recently rolled out integration software with the VA Lighthouse API for our VSO and wanted to share an Open Source example of how to integrate with the VA API.
 
-### How this setup works
+### How this setup is different from our setup
 ---
 This setup is somewhat different than our internal application, here are the main differences
 
@@ -31,3 +31,7 @@ This setup is somewhat different than our internal application, here are the mai
 + This setup uses text files for status change tracking, our implementation uses a database.
 
 The reason for the differences is simple. We wanted to build an application that you could pull down, throw on a server, and start experimenting with right away. Obviously you wouldn't use this application in full blown production mode. But more so to give you an example of how to start integrating with the VA Lighthouse API.
+
+### How this setup works.
+---
+Once you pull down all the files. There is a index.html file. The index.html file is the main front end file. 
