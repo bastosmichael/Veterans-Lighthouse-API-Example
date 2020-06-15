@@ -15,3 +15,15 @@ The Business & Location Innovative Services (BLIS) team for Cabarrus County cons
 + Marci Jones - Software Developer
 
 Our team is responsible for software development and support for the [County](https://www.cabarruscounty.us/departments/information-technology). We work under the direction of the Chief Information Officer.
+
+### About the VA Lighthouse API
+---
+The VA Lighthouse API is a way for Local Governments and Veteran Services Offices to upload documents and form data to the VA digitally as opposed to other options, such as fax. The documentation for interacting with the API can be found here. With the API Veteran Services Offices can track the status of the documents uploaded as well.
+
+We recently rolled out integration software with the VA Lighthouse API for our VSO and wanted to share an Open Source example of how to integrate with the VA API.
+
+### How this setup works
+---
+This setup is somewhat different than our internal application, here are the main differences
+
++ This setup uses a minimal CSS framework called Spectre and Vanilla Javascript on the front end and PHP on the backend. Our setup uses VueJS and Vuetify.
