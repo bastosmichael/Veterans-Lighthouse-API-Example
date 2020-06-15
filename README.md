@@ -26,4 +26,6 @@ We recently rolled out integration software with the VA Lighthouse API for our V
 ---
 This setup is somewhat different than our internal application, here are the main differences
 
-+ This setup uses a minimal CSS framework called Spectre and Vanilla Javascript on the front end and PHP on the backend. Our setup uses VueJS and Vuetify.
++ This setup uses a minimal CSS framework called Spectre and Vanilla Javascript on the front end and PHP on the back end. Our setup uses VueJS and Vuetify on the frontend, and PHP on the back end.
++ This setup uses Python to grab the packet statuses. Our implementation uses Laserfiche and Laserfiche workflow to grab the status every 2 hours and web client.
++ This setup uses text files for status change tracking, our implementation uses a database.
