@@ -192,6 +192,9 @@
 
 <script>
     window.addEventListener('load', (event) => {
+        
+        //SCRIPT USES innerHTML for handling DOM attachments. This is because it's all static
+        //If you do include user inputted data into any of these elements, DO NOT use innerHTML.
 
         function grabPacketStatuses() {
 
