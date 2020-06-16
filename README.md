@@ -33,7 +33,7 @@ This setup is somewhat different than our internal application, here are the mai
 
 The reason for these differences is simple, We wanted to build an open source application that you could pull down, throw on a server, and start experimenting with right away and view all the VA API calls and how they work. Obviously you wouldn't use this application in full blown production mode. But more so to give you an example of how to start integrating with the VA Lighthouse API.
 
-### Front end instructions.
+### Front end
 ---
 Once you pull down all the files you will se a index.html file. The index.html file is the main front end file and is setup as a single page application with two pages(div tags). The first slot is a file uploader. The second slot is a table that has all GUIDS and statuses in circulation contained in a table.
 
@@ -55,3 +55,7 @@ GRAB_VETERAN_STATUSES.php Web Service - This web service loops through all the f
 The Python script, when ran(Or put on a scheduled task), loops through the directory and pulls the GUID from the text file. It then performs an API call using Python Requests and updates the text file with the new status.
 
 **NOTE** If you are a high volume VSO, the VA also offers another way to do a bulk status grab. We don't use this method because our volume is so low(the most we may have in any given time in circulation is roughly 10-20 packets), so looping through each works just fine for us. If you can't afford to do this due to volume, please check out the bulk status upload as described in the VA Lighthouse API documentation.
+
+### Storing your API key
+---
+This script makes no assumptions about HOW YOU store your API key. For these examples you can plug and play, but please note, whenever you go live, the VA Lighthouse API team WILL want you to demo your app. **If your API key is not stored SAFELY AND SECURE THEY WILL NOT GIVE YOU ACCESS TO PRODUCTION.***
