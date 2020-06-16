@@ -48,9 +48,9 @@ The second transaction it handles is generating a table that contains all Vetera
 
 ### Back end web services
 ---
-UPLOAD_FILE_TO_VA.php Web Service - This web service is the POST web service for the first. The front end transaction on submit performs a POST to this backend web service that contains all necessary files and metadata. This backend Web service then POSTS to the VA initially via PHP cURL to get the PUT location for the file uploads. Upon recieving the PUT location, it then loops through each uploaded file using curl_create_file and pushes them to an array in the naming conventions used by the VA Lighthouse API. Upon receiving a success message, it "touches" a file that exists in the veteran's directory in this format...GUID_STATUS.txt, so for example, c49b0419-c0a0-4e3b-89f4-d58e99f0d47d_UPLOADED.txt.
+UPLOAD_FILE_TO_VA.php Web Service - This web service is the POST web service for the first page(Veteran upload). The front end transaction on submit performs a POST to this backend web service that contains all necessary files and metadata. This backend Web service then POSTS to the VA initially via PHP cURL to get the PUT location for the file uploads. Upon recieving the PUT location, it then loops through each uploaded file using curl_create_file and pushes them to an array in the naming conventions used by the VA Lighthouse API. Upon receiving a success message, it "touches" a file in veteran's directory in this format...GUID_STATUS.txt, so for example, c49b0419-c0a0-4e3b-89f4-d58e99f0d47d_UPLOADED.txt. In a production app, this would be the equivalent of a database.
 
-GRAB_VETERAN_STATUSES.php Web Service - This web service loops through all the files and directories, grabs the current status of each VA upload, and renders them to a front end table.
+GRAB_VETERAN_STATUSES.php Web Service - This web service loops through all the files and directories, grabs the current status of each VA upload using glob, and renders them to a front end table.
 
 ### Python Script
 ---
