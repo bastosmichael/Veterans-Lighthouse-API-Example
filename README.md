@@ -29,9 +29,23 @@ This setup is somewhat different than our internal application, here are the mai
 + This setup uses a minimal CSS framework called Spectre and Vanilla Javascript on the front end and PHP on the back end. Our setup uses VueJS and Vuetify on the frontend, and PHP on the back end.
 + This setup uses Python to grab the packet statuses. Our implementation uses Laserfiche and Laserfiche workflow to grab the status every 2 hours and web client gives the end user a view into Laserfiche.
 + This setup uses text files for status change tracking, our implementation uses a database.
++ Our form input is validated according to the specs under the VA Lighthouse Documentation.
 
-The reason for the differences is simple. We wanted to build an application that you could pull down, throw on a server, and start experimenting with right away. Obviously you wouldn't use this application in full blown production mode. But more so to give you an example of how to start integrating with the VA Lighthouse API.
+The reason for these differences is simple, We wanted to build an open source application that you could pull down, throw on a server, and start experimenting with right away and view all the VA API calls and how they work. Obviously you wouldn't use this application in full blown production mode. But more so to give you an example of how to start integrating with the VA Lighthouse API.
 
-### How this setup works.
+### Front end instructions.
 ---
-Once you pull down all the files. There is a index.html file. The index.html file is the main front end file. 
+Once you pull down all the files you will se a index.html file. The index.html file is the main front end file and is setup as a single page application with two pages(div tags). The first slot is a file uploader. The second slot is a table that has all GUIDS and statuses in circulation contained in a table.
+
+The front end uses axios.js and AJAX calls the complete it's transactions. 
+
+The first transaction it handles is uploading a file to the VA. The front end for this is a form with a main file upload and the ability to create more file uploads via the "Add Attachment Button". We did leave out input/file validation because different people perfer different methods of validation and may vary depending on frameworks used. For instructions and proper validation for each field, please refer to the VA Lighthouse API documentation.
+
+The second transaction it handles is generating a table that contains all Veteran First Name, GUID, and VA Status.
+
+
+### Back end web services
+---
+UPLOAD_FILE_TO_VA.php Web Service - This web service is the POST web service for the first. The front end transaction on submit performs a POST to this backend web service that contains all necessary files and metadata. This backend Web service then POSTS to the VA initially via PHP cURL to get the PUT location for the file uploads. Upon recieving the PUT location, it then loops through each uploaded file using curl_create_file and pushes them to an array in the naming conventions used by the VA Lighthouse API. Upon receiving a success message, it "touches" a file that exists in the veteran's directory in this format...GUID_STATUS.txt, so for example, c49b0419-c0a0-4e3b-89f4-d58e99f0d47d_UPLOADED.txt.
+
+GRAB_VETERAN_STATUSES.php Web Service - This web service loops through all the files and directories, grabs the current status of each VA upload, and renders them to a front end table.
