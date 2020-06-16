@@ -1,0 +1,373 @@
+<html>
+
+<head>
+
+    <link rel="stylesheet" href="assets/spectre.min.css">
+    <link rel="stylesheet" href="assets/spectre-exp.min.css">
+    <link rel="stylesheet" href="assets/spectre-icons.min.css">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+
+    <script src="assets/axios.min.js"></script>
+
+</head>
+
+<body>
+
+    <header class="navbar">
+
+        <section class="navbar-section">
+
+            <a href="#uploadPacket" class="btn btn-link menuOptions">Upload Packet</a>
+            <a href="#viewPacketsInCirculation" class="btn btn-link menuOptions">View Packets in Circulation</a>
+
+        </section>
+
+    </header>
+
+    <br>
+
+    <div id="showUploadForm">
+
+        <form id="transmitPacketToVA">
+
+            <div class="container">
+
+                <div class="columns">
+
+                    <div class="form-group column col-4 col-mx-auto">
+                        <label class="form-label" for="veteranFirstName">First Name</label>
+                        <input class="form-input" type="text" id="veteranFirstName" placeholder="First Name" required>
+                    </div>
+
+                </div>
+
+                <div class="columns">
+
+                    <div class="form-group column col-4 col-mx-auto">
+                        <label class="form-label" for="veteranLastName">Last Name</label>
+                        <input class="form-input" type="text" id="veteranLastName" placeholder="Last Name" required>
+                    </div>
+
+                </div>
+
+                <div class="columns">
+
+                    <div class="form-group column col-4 col-mx-auto">
+                        <label class="form-label" for="veteranFileNumber">File Number</label>
+                        <input class="form-input" type="text" id="veteranFileNumber" placeholder="File Number">
+                    </div>
+
+                </div>
+
+                <div class="columns">
+
+                    <div class="form-group column col-4 col-mx-auto">
+                        <label class="form-label" for="veteranZipCode">Zip Code</label>
+                        <input class="form-input" type="text" id="veteranZipCode" placeholder="Zip Code">
+                    </div>
+
+                </div>
+
+                <div class="columns">
+
+                    <div class="form-group column col-4 col-mx-auto">
+                        <label class="form-label" for="veteranUploadSource">Source</label>
+                        <input class="form-input" type="text" id="veteranUploadSource" placeholder="Source">
+                    </div>
+
+                </div>
+
+                <div class="columns">
+
+                    <div class="form-group column col-4 col-mx-auto">
+                        <label class="form-label" for="veteranDocType">Doc Type</label>
+                        <input class="form-input" type="text" id="veteranDocType" placeholder="Doc Type">
+                    </div>
+
+                </div>
+
+                <div class="columns">
+
+                    <div class="form-group column col-4 col-mx-auto">
+                        <label class="form-label" for="veteranMainFile">Main File</label>
+                        <input class="form-input" type="file" id="veteranMainFile" placeholder="Main File">
+                    </div>
+
+                </div>
+
+                <br><br>
+
+                <div class="columns">
+
+                    <div class="column flex-centered">
+                        <button class="btn btn-primary" type="button" id="addAttachmentButton">Add Attachment</button>
+                    </div>
+
+                    <br><br>
+
+                </div>
+
+                <div id="attachmentsForUpload">
+
+                </div>
+
+
+
+                <br><br>
+
+                <div class="columns">
+
+                    <div class="column flex-centered">
+                        <button class="btn btn-primary" type="submit" id="submitTotalPacketToVA">SUBMIT PACKET TO
+                            VA</button>
+                    </div>
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+    <div id="showPacketsInCirculation">
+
+        <table class="table table-striped table-hover">
+
+            <thead>
+
+                <tr>
+                    <th>Veteran Name</th>
+                    <th>GUID</th>
+                    <th>Status</th>
+                </tr>
+
+            </thead>
+
+            <tbody id="veteranStatusesTableBody">
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <div class="modal" id="uploadStatusModal">
+
+        <div class="modal-container">
+
+            <div class="modal-header">
+                <a href="#close" class="btn btn-clear float-right" aria-label="Close" id="closeStatusModal"></a>
+                <div class="modal-title h5" id="uploadModalTitle"></div>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="content">
+                    <p id="modalUploadMessage"></p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="modal" id="updateStatusOfAllPacketsModal">
+
+        <div class="modal-container">
+
+            <div class="modal-header">
+                <a href="#close" class="btn btn-clear float-right" aria-label="Close" id="closeStatusModal"></a>
+                <div class="modal-title h5" id="uploadModalTitle">Update Status Of All Packets Modal</div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+</body>
+
+<script>
+    window.addEventListener('load', (event) => {
+
+        function grabPacketStatuses() {
+
+            axios.post("PHP_SCRIPTS/GRAB_VETERAN_STATUSES.php")
+            .then(function(response) {
+                var tableHTML = ""
+                var veteranPacketStatuses = response.data
+
+                for(var i = 0; i < veteranPacketStatuses.length; i++) {
+                    
+                    var veteranGUID = veteranPacketStatuses[i].veteranGUID
+                    var veteranStatus = veteranPacketStatuses[i].veteranStatus
+                    var veteranFullName = veteranPacketStatuses[i].veteranFullName
+
+                    tableHTML = tableHTML + "<tr><td>" + veteranFullName + "</td><td>" + veteranGUID + "</td><td>" + veteranStatus + "</td></tr>" 
+                }
+
+                document.getElementById("veteranStatusesTableBody").innerHTML = tableHTML
+
+            })
+        }
+
+        document.getElementById("showPacketsInCirculation").hidden = true
+
+        var attachmentCounter = 0 // Attachment Counter for Upload Screen
+
+        //Loops through all menu items and adds the event listener to each item, switch statement below determines which screen to present
+
+        var menuElements = document.getElementsByClassName("menuOptions")
+
+        for (var i = 0; i < menuElements.length; i++) {
+
+            menuElements[i].addEventListener("click", function (event) {
+                event.preventDefault()
+                var linkedClicked = event.target.innerHTML
+
+                document.getElementById("showUploadForm").hidden = true
+                document.getElementById("showPacketsInCirculation").hidden = true
+
+                //THIS IS A SWITCH STATEMENT INSTEAD OF A IF/ELSEIF IN CASE YOU WANT TO ADD MORE OPTIONS, JUST PLUG AND PLAY
+
+                switch (linkedClicked) {
+
+                    case "Upload Packet":
+                        document.getElementById("showUploadForm").hidden = false
+                        break;
+
+                    case "View Packets in Circulation":
+                        document.getElementById("showPacketsInCirculation").hidden = false
+                        grabPacketStatuses()
+                }
+
+            })
+
+        }
+
+        //Event Listen for Closing the Upload Status Modal when it pops up
+
+        document.getElementById("closeStatusModal").addEventListener("click", function (event) {
+            event.preventDefault()
+            document.getElementById("uploadStatusModal").classList.remove("active")
+        })
+
+
+        //Event Listener for adding an attachment. Real world example you might want to add a remove button
+
+        document.getElementById("addAttachmentButton").addEventListener("click", function () {
+
+            attachmentCounter = attachmentCounter + 1
+
+            var attachmentsForUploadDIV = document.getElementById("attachmentsForUpload")
+
+            var newAttachmentOption = '<div class="divider text-center" data-content=""></div><br>' +
+                '<div class="columns">' +
+                '<div class="form-group column col-4 col-mx-auto">' +
+                '<label class="form-label" for="attachment' + attachmentCounter + '">Attachment ' +
+                attachmentCounter + '</label>' +
+                '<input class="form-input" type="file" id="attachment' + attachmentCounter +
+                '"placeholder="Attachment ' + attachmentCounter + '">' +
+                '</div></div>'
+
+
+            attachmentsForUploadDIV.innerHTML = attachmentsForUploadDIV.innerHTML + newAttachmentOption
+
+        })
+
+        //Handles the submission of the packet to the VA
+
+        document.getElementById("submitTotalPacketToVA").addEventListener("click", function (event) {
+
+            event.preventDefault()
+
+            document.getElementById("submitTotalPacketToVA").disabled = true
+            document.getElementById("addAttachmentButton").disabled = true
+            document.getElementById("submitTotalPacketToVA").classList.add(
+                "loading") // Makes the button disabled and spin during transaction
+
+            //Bundles the Veteran's Metadata as an object for transmit
+
+            var veteranMetadataObj = {
+                "veteranFirstName": document.getElementById("veteranFirstName").value,
+                "veteranLastName": document.getElementById("veteranLastName").value,
+                "fileNumber": document.getElementById("veteranFileNumber").value,
+                "zipCode": document.getElementById("veteranZipCode").value,
+                "source": document.getElementById("veteranUploadSource").value,
+                "docType": document.getElementById("veteranDocType").value
+            }
+
+            //Turns the Metadata into a BLOB file. This make it EASIER FOR TRANMISSION when uploading to the VA
+
+            veteranMetadataBLOB = new Blob([JSON.stringify(veteranMetadataObj)], {
+                type: "application/json"
+            })
+
+            let veteranFormData = new FormData()
+
+            veteranFormData.append("veteranFormInformation", JSON.stringify(
+                veteranMetadataObj
+            )) // This is here because the directory created contains the veteran's first name and last name
+            veteranFormData.append("veteranMetadata", veteranMetadataBLOB,
+                "metadata.json") // Sends the metadata.json BLOB, as metadata.json
+            veteranFormData.append("mainFile", document.getElementById("veteranMainFile").files[0],
+                "content.pdf") // Sends the main pdf as content.pdf
+
+            //Determines if attachments exists or not
+
+            if (attachmentCounter > 0) {
+
+                for (var i = 0; i < attachmentCounter; i++) {
+
+                    var trueElementIteration = i + 1
+
+                    var fileElementName = "attachment" +
+                        trueElementIteration // fileElementName, for finding the ID
+                    var fileElementNameOnDisk = fileElementName +
+                        ".pdf" // fileElementName + pdf, so for example, attachment1.pdf
+
+                    veteranFormData.append(fileElementName, document.getElementById(fileElementName)
+                        .files[0], fileElementNameOnDisk)
+
+                }
+
+            }
+
+            //AXIOS handles post to the back end. Backend has cURL, backend handles the transaction to the VA
+
+            axios.post("PHP_SCRIPTS/UPLOAD_TO_VA.php", veteranFormData)
+                .then(function (response) {
+
+                    document.getElementById("submitTotalPacketToVA").disabled = false
+                    document.getElementById("addAttachmentButton").disabled = false
+                    document.getElementById("submitTotalPacketToVA").classList.remove("loading")
+                    attachmentCounter = 0
+
+                    var modalMessage = ""
+                    var modalTitle = ""
+
+                    if (response.data == "UPLOAD SUCCESSFUL") {
+                        modalTitle = "Upload Successful"
+                        modalMessage = "Packet Uploaded Successfully to the VA"
+                    } else {
+                        modalTitle = "Upload Failed"
+                        modalMessage = "There was a problem uploading the packet"
+                    }
+
+                    document.getElementById("uploadModalTitle").innerHTML = modalTitle
+                    document.getElementById("modalUploadMessage").innerHTML = modalMessage
+                    document.getElementById("uploadStatusModal").classList.add("active")
+
+                })
+
+        })
+
+
+
+    })
+</script>
+
+</html>
