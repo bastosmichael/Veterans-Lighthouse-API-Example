@@ -314,7 +314,7 @@
             )) // This is here because the directory created contains the veteran's first name and last name
             veteranFormData.append("veteranMetadata", veteranMetadataBLOB,
                 "metadata.json") // Sends the metadata.json BLOB, as metadata.json
-            veteranFormData.append("mainFile", document.getElementById("veteranMainFile").files[0],
+            veteranFormData.append("content", document.getElementById("veteranMainFile").files[0],
                 "content.pdf") // Sends the main pdf as content.pdf
 
             //Determines if attachments exists or not
