@@ -37,7 +37,7 @@ The reason for these differences is simple, We wanted to build an open source ap
 
 ### Front end
 ---
-Once you pull down all the files you will see an index.html file. The index.html file is the main front end file and is setup as a single page application with two pages(div tags). The first slot is a file uploader. The second slot is a table that has all GUIDS and statuses in circulation contained in a table.
+Once you pull down all the files you will see an index.html file. The index.html file is the main front end file and is setup as a single page application with two pages(div tags). The first div tag is a file uploader. The second div tag is a table that has all GUIDS and statuses in circulation contained in a table.
 
 The front end uses axios.js and AJAX calls the complete it's transactions. 
 
