@@ -262,20 +262,23 @@
         document.getElementById("addAttachmentButton").addEventListener("click", function () {
 
             attachmentCounter = attachmentCounter + 1
-
-            var attachmentsForUploadDIV = document.getElementById("attachmentsForUpload")
-
+            
             var newAttachmentOption = '<div class="divider text-center" data-content=""></div><br>' +
                 '<div class="columns">' +
                 '<div class="form-group column col-4 col-mx-auto">' +
                 '<label class="form-label" for="attachment' + attachmentCounter + '">Attachment ' +
                 attachmentCounter + '</label>' +
-                '<input class="form-input" type="file" id="attachment' + attachmentCounter +
+                '<input class="form-input" type="file" accept=".pdf" id="attachment' + attachmentCounter +
                 '"placeholder="Attachment ' + attachmentCounter + '">' +
                 '</div></div>'
 
+                var newAttachmentOptionDIV = document.createElement('div')
+                newAttachmentOptionDIV.innerHTML = newAttachmentOption
 
-            attachmentsForUploadDIV.innerHTML = attachmentsForUploadDIV.innerHTML + newAttachmentOption
+                var attachmentUploadDIV = document.querySelector('#attachmentsForUpload')
+                attachmentUploadDIV.before(newAttachmentOptionDIV)
+                
+        })
 
         })
 
