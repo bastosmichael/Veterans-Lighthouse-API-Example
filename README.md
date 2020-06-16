@@ -33,7 +33,7 @@ This setup is somewhat different than our internal application, here are the mai
 + This setup uses text files for status change tracking, our implementation uses a database.
 + Our form input is validated according to the specs under the VA Lighthouse Documentation.
 
-The reason for these differences is simple, We wanted to build an open source application that you could pull down, throw on a server, and start experimenting with right away and view all the VA API calls and how they work. Obviously you wouldn't use this application in full blown production mode. But more so to give you an example of how to start integrating with the VA Lighthouse API.
+The reason for these differences is simple, We wanted to build an open source application that you could pull down, throw on a server, and start experimenting with right away and view all the VA API calls and how they work. **THIS IS NOT MEANT TO BE A PRODUCTION APP**, but rather, a way for you to lay the ground work FOR a production app. But more so to give you an example of how to start integrating with the VA Lighthouse API.
 
 ### Front end
 ---
