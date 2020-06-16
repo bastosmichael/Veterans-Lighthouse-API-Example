@@ -20,7 +20,7 @@ Our team is responsible for software development and support for the [County](ht
 ---
 The VA Lighthouse API is a way for Local Governments and Veteran Services Offices to upload documents to the VA digitally as opposed to other options, such as fax. The API also allows for better status tracking as uploaded packets make their way through the system.
 
-The documentation for interacting with the API can be found 
+The documentation for interacting with the API can be found [here](https://developer.va.gov/explore/benefits/docs/benefits?version=current)
 
 We recently rolled out integration software with the VA Lighthouse API for our VSO and wanted to share an Open Source example of how to integrate with the VA API.
 
