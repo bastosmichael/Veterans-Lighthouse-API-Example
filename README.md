@@ -58,4 +58,4 @@ The Python script, when ran(Or put on a scheduled task), loops through the direc
 
 ### Storing your API key
 ---
-This script makes no assumptions about HOW YOU store your API key. For these examples you can plug and play, but please note, whenever you go live, the VA Lighthouse API team WILL want you to demo your app. **If your API key is not stored SAFELY AND SECURE THEY WILL NOT GIVE YOU ACCESS TO PRODUCTION.***
+These script makes no assumptions about HOW YOU store your API key. For these examples you can plug and play, but please note, whenever you go live, the VA Lighthouse API team WILL want you to demo your app. **If your API key is not stored SAFELY AND SECURE THEY WILL NOT GIVE YOU ACCESS TO PRODUCTION.***
