@@ -53,3 +53,5 @@ GRAB_VETERAN_STATUSES.php Web Service - This web service loops through all the f
 ### Python Script
 ---
 The Python script, when ran(Or put on a scheduled task), loops through the directory and pulls the GUID from the text file. It then performs an API call using Python Requests and updates the text file with the new status.
+
+**NOTE** If you are a high volume VSO, the VA also offers another way to do a bulk status grab. We don't use this method because our volume is so low(the most we may have in any given time in circulation is roughly 10-20 packets), so looping through each works just fine for us. If you can't afford to do this due to volume, please check out the bulk status upload as described in the VA Lighthouse API documentation.
