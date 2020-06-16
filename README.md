@@ -61,3 +61,7 @@ The Python script, when ran(Or put on a scheduled task), loops through the direc
 ### Storing your API key
 ---
 These scripts makes no assumptions about HOW YOU store your API key. For these examples you can plug and play, but please note, whenever you go live, the VA Lighthouse API team WILL want you to demo your app. **If your API key is not stored SAFELY AND SECURE THEY WILL NOT GIVE YOU ACCESS TO PRODUCTION.***
+
+### Collaboration
+---
+If you would like to know more about our actual production app and how we have everything setup to work on VueJS/PHP/Laserfiche stack, please reach out to us, we are always happy to collaborate with other Government agencies! 
