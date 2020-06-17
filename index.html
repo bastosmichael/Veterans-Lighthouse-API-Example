@@ -177,6 +177,8 @@
 <script>
     window.addEventListener('load', (event) => {
 
+        //USED FOR GENERATING LINK FOR REMOVE BUTTON
+
         function grabPacketStatuses() {
 
             //GENERATE THE TABLE IN CODE SO IT CAN BE TOTALLY SANITIZED BY DOMPurify. Prevents XSS
@@ -263,17 +265,20 @@
                 '<div class="form-group column col-4 col-mx-auto">' +
                 '<label class="form-label" for="attachment' + attachmentCounter + '">Attachment ' +
                 attachmentCounter + '</label>' +
-                '<input class="form-input" type="file" accept=".pdf" id="attachment' + attachmentCounter +
+                '<input class="form-input" type="file" accept=".pdf" id="attachment' +
+                attachmentCounter +
                 '"placeholder="Attachment ' + attachmentCounter + '">' +
                 '</div></div>'
 
-                var newAttachmentOptionSanitized = DOMPurify.sanitize(newAttachmentOption)
+            var newAttachmentOptionSanitized = DOMPurify.sanitize(newAttachmentOption)
 
-                var newAttachmentOptionDIV = document.createElement('div')
-                newAttachmentOptionDIV.innerHTML = newAttachmentOptionSanitized
+            var newAttachmentOptionDIV = document.createElement('div')
+            newAttachmentOptionDIV.setAttribute("class", "attachmentDOMDIV")
 
-                var attachmentUploadDIV = document.getElementById('attachmentsForUpload')
-                attachmentUploadDIV.before(newAttachmentOptionDIV)
+            newAttachmentOptionDIV.innerHTML = newAttachmentOptionSanitized
+
+            var attachmentUploadDIV = document.getElementById('attachmentsForUpload')
+            attachmentUploadDIV.before(newAttachmentOptionDIV)
 
         })
 
@@ -281,12 +286,10 @@
 
         document.getElementById("submitTotalPacketToVA").addEventListener("click", function (event) {
 
-            event.preventDefault()
+            var proceedWithUploadFlag = true
+            var reasonUploadNotAllowed = ""
 
-            document.getElementById("submitTotalPacketToVA").disabled = true
-            document.getElementById("addAttachmentButton").disabled = true
-            document.getElementById("submitTotalPacketToVA").classList.add(
-                "loading") // Makes the button disabled and spin during transaction
+            event.preventDefault()
 
             //Bundles the Veteran's Metadata as an object for transmit
 
@@ -312,8 +315,17 @@
             )) // This is here because the directory created contains the veteran's first name and last name
             veteranFormData.append("metadata", veteranMetadataBLOB,
                 "metadata.json") // Sends the metadata.json BLOB, as metadata.json
-            veteranFormData.append("content", document.getElementById("veteranMainFile").files[0],
-                "content.pdf") // Sends the main pdf as content.pdf
+
+            if (document.getElementById("veteranMainFile").files[0].type == "application/pdf") {
+
+                veteranFormData.append("content", document.getElementById("veteranMainFile").files[0],
+                    "content.pdf") // Sends the main pdf as content.pdf
+
+            } else {
+                proceedWithUploadFlag = 0
+                reasonUploadNotAllowed = reasonUploadNotAllowed +
+                    "MAIN FILE IS VALID FILE TYPE, MUST BE PDF"
+            }
 
             //Determines if attachments exists or not
 
@@ -325,12 +337,19 @@
 
                     var fileElementName = "attachment" +
                         trueElementIteration // fileElementName, for finding the ID
-                    var fileElementNameOnDisk = fileElementName +
-                        ".pdf" // fileElementName + pdf, so for example, attachment1.pdf
 
-                    veteranFormData.append(fileElementName, document.getElementById(fileElementName)
-                        .files[0], fileElementNameOnDisk)
+                    if (document.getElementById(fileElementName).files[0].type == "application/pdf") {
 
+                        var fileElementNameOnDisk = fileElementName +
+                            ".pdf" // fileElementName + pdf, so for example, attachment1.pdf
+                        veteranFormData.append(fileElementName, document.getElementById(fileElementName)
+                            .files[0], fileElementNameOnDisk)
+
+                    } else {
+                        proceedWithUploadFlag = false
+                        reasonUploadNotAllowed = reasonUploadNotAllowed + "Attachment " +
+                            attachmentCounter + " is NOT a PDF"
+                    }
 
                 }
 
@@ -338,30 +357,42 @@
 
             //AXIOS handles post to the back end. Backend has cURL, backend handles the transaction to the VA
 
-            axios.post("PHP_SCRIPTS/UPLOAD_TO_VA.php", veteranFormData)
-                .then(function (response) {
+            if (proceedWithUploadFlag == true) {
 
-                    document.getElementById("submitTotalPacketToVA").disabled = false
-                    document.getElementById("addAttachmentButton").disabled = false
-                    document.getElementById("submitTotalPacketToVA").classList.remove("loading")
-                    attachmentCounter = 0
+                document.getElementById("submitTotalPacketToVA").disabled = true
+                document.getElementById("addAttachmentButton").disabled = true
 
-                    var modalMessage = ""
-                    var modalTitle = ""
+                document.getElementById("submitTotalPacketToVA").classList.add(
+                    "loading") // Makes the button disabled and spin during transaction
 
-                    if (response.data == "UPLOAD SUCCESSFUL") {
-                        modalTitle = "Upload Successful"
-                        modalMessage = "Packet Uploaded Successfully to the VA"
-                    } else {
-                        modalTitle = "Upload Failed"
-                        modalMessage = "There was a problem uploading the packet"
-                    }
+                axios.post("PHP_SCRIPTS/UPLOAD_TO_VA.php", veteranFormData)
+                    .then(function (response) {
 
-                    document.getElementById("uploadModalTitle").innerHTML = modalTitle
-                    document.getElementById("modalUploadMessage").innerHTML = modalMessage
-                    document.getElementById("uploadStatusModal").classList.add("active")
+                        document.getElementById("submitTotalPacketToVA").disabled = false
+                        document.getElementById("addAttachmentButton").disabled = false
+                        document.getElementById("submitTotalPacketToVA").classList.remove("loading")
+                        attachmentCounter = 0
 
-                })
+                        var modalMessage = ""
+                        var modalTitle = ""
+
+                        if (response.data == "UPLOAD SUCCESSFUL") {
+                            modalTitle = "Upload Successful"
+                            modalMessage = "Packet Uploaded Successfully to the VA"
+                        } else {
+                            modalTitle = "Upload Failed"
+                            modalMessage = "There was a problem uploading the packet"
+                        }
+
+                        document.getElementById("uploadModalTitle").innerHTML = modalTitle
+                        document.getElementById("modalUploadMessage").innerHTML = modalMessage
+                        document.getElementById("uploadStatusModal").classList.add("active")
+
+                    })
+
+            } else {
+                alert("CANNOT PROCEED WITH UPLOAD\r\n" + reasonUploadNotAllowed)
+            }
 
         })
 
