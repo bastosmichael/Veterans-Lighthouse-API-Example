@@ -41,7 +41,7 @@ Once you pull down all the files you will see an index.html file. The index.html
 
 The front end uses axios.js and AJAX calls the complete it's transactions. 
 
-The first transaction it handles is uploading a file to the VA. The front end for this is a form with a main file upload and the ability to create more file uploads via the "Add Attachment Button". We did leave out input/file validation because different people perfer different methods of validation and may vary depending on frameworks used. For instructions and proper validation for each field, please refer to the VA Lighthouse API documentation.
+The first transaction it handles is uploading a file to the VA. The front end for this is a form with a main file upload and the ability to create more file uploads via the "Add Attachment Button". We did leave out input validationbecause different people perfer different methods of validation and may vary depending on frameworks used. We do however do file validation to ensure all files uploaded are PDFs. For instructions and proper validation for each field, please refer to the VA Lighthouse API documentation.
 
 The second transaction it handles is generating a table that contains all Veteran First Name, GUID, and VA Status.
 
