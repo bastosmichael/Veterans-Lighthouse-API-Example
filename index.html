@@ -162,7 +162,10 @@
 </body>
 
 <script>
-    window.addEventListener('load', (event) => {
+
+    window.addEventListener('load', (event) => {    
+
+        //SETS VARIABLES FOR DOCUMENT ID ELEMENTS. ANY ELEMENT OCCURING MORE THAN ONCE GOES HERE
 
         const showPacketsInCirculationElement = document.getElementById("showPacketsInCirculation")
         const showUploadFormElement = document.getElementById("showUploadForm")
@@ -176,7 +179,7 @@
             //GENERATE THE TABLE IN CODE SO IT CAN BE TOTALLY SANITIZED BY DOMPurify. Prevents XSS
 
             axios.post("PHP_SCRIPTS/GRAB_VETERAN_STATUSES.php")
-                .then(function (response) {
+                .then(function(response) {
 
                     let veteranPacketStatuses = response.data
 
@@ -192,7 +195,7 @@
 
                                             <tbody>`
 
-                    for (let i = 0; i < veteranPacketStatuses.length; i++) {
+                    for(let i = 0; i < veteranPacketStatuses.length; i++) {
 
                         const veteranGUID = veteranPacketStatuses[i].veteranGUID
                         const veteranStatus = veteranPacketStatuses[i].veteranStatus
@@ -214,6 +217,7 @@
                 })
         }
 
+        //BEGINNING ELEMENT THAT HIDES ON DOM LOAD
         showPacketsInCirculationElement.hidden = true
 
         let attachmentCounter = 0 // Attachment Counter for Upload Screen
@@ -222,9 +226,9 @@
 
         let menuElements = document.getElementsByClassName("menuOptions")
 
-        for (let i = 0; i < menuElements.length; i++) {
+        for(let i = 0; i < menuElements.length; i++) {
 
-            menuElements[i].addEventListener("click", function (event) {
+            menuElements[i].addEventListener("click", function(event) {
 
                 event.preventDefault()
                 let linkedClicked = event.target.innerText
@@ -252,7 +256,7 @@
 
         //Event Listen for Closing the Upload Status Modal when it pops up
 
-        document.getElementById("closeStatusModal").addEventListener("click", function (event) {
+        document.getElementById("closeStatusModal").addEventListener("click", function(event) {
             event.preventDefault()
             uploadStatusModalElement.classList.remove("active")
         })
@@ -260,7 +264,7 @@
 
         //Event Listener for adding an attachment. Real world example you might want to add a remove button
 
-        addAttachmentButtonElement.addEventListener("click", function () {
+        addAttachmentButtonElement.addEventListener("click", function() {
 
             attachmentCounter = attachmentCounter + 1
 
@@ -289,7 +293,7 @@
 
         //Handles the submission of the packet to the VA
 
-        submitTotalPacketToVAElement.addEventListener("click", function (event) {
+        submitTotalPacketToVAElement.addEventListener("click", function(event) {
 
             event.preventDefault()
 
@@ -337,42 +341,38 @@
             // Sends the metadata.json BLOB, as metadata.json
             veteranFormData.append("metadata", veteranMetadataBLOB, "metadata.json")
 
-            if (veteranMainFilePDF.type == "application/pdf") {
-                veteranFormData.append("content", veteranMainFilePDF,
-                    "content.pdf") // Sends the main pdf as content.pdf
-            } else {
+            if(veteranMainFilePDF.type == "application/pdf") {
+                veteranFormData.append("content", veteranMainFilePDF, "content.pdf") // Sends the main pdf as content.pdf
+            }
+            else {
                 proceedWithUploadFlag = 0
-                reasonUploadNotAllowed =
-                    `${reasonUploadNotAllowed} MAIN FILE IS AN INVALID FILE TYPE, MUST BE PDF\r\n`
+                reasonUploadNotAllowed = `${reasonUploadNotAllowed} MAIN FILE IS AN INVALID FILE TYPE, MUST BE PDF\r\n`
             }
 
             //Determines if attachments exists or not
 
-            if (attachmentCounter > 0) {
+            if(attachmentCounter > 0) {
 
-                for (let i = 0; i < attachmentCounter; i++) {
+                for(let i = 0; i < attachmentCounter; i++) {
 
                     const trueElementIteration = i + 1
 
-                    const fileElementName = "attachment" +
-                        trueElementIteration // fileElementName, for finding the ID
+                    const fileElementName = `attachment${trueElementIteration}` // fileElementName, for finding the ID
 
                     const fileElementNameIDRef = document.getElementById(fileElementName)
                     const attachmentFilePDF = fileElementNameIDRef.files[0]
 
 
-                    if (attachmentFilePDF.type == "application/pdf") {
+                    if(attachmentFilePDF.type == "application/pdf") {
 
-                        const fileElementNameOnDisk =
-                            `${fileElementName}.pdf` // fileElementName + pdf, so for example, attachment1.pdf
+                        const fileElementNameOnDisk = `${fileElementName}.pdf` // fileElementName + pdf, so for example, attachment1.pdf
 
-                        veteranFormData.append(fileElementName, attachmentFilePDF,
-                            fileElementNameOnDisk)
+                        veteranFormData.append(fileElementName,attachmentFilePDF,fileElementNameOnDisk)
 
-                    } else {
+                    }
+                    else {
                         proceedWithUploadFlag = false
-                        reasonUploadNotAllowed =
-                            `${reasonUploadNotAllowed} Attachment ${trueElementIteration} is NOT a PDF\r\n`
+                        reasonUploadNotAllowed = `${reasonUploadNotAllowed} Attachment ${trueElementIteration} is NOT a PDF\r\n`
                     }
 
                 }
@@ -381,16 +381,15 @@
 
             //AXIOS handles post to the back end. Backend has cURL, backend handles the transaction to the VA
 
-            if (proceedWithUploadFlag == true) {
+            if(proceedWithUploadFlag == true) {
 
                 submitTotalPacketToVAElement.disabled = true
                 addAttachmentButtonElement.disabled = true
 
-                submitTotalPacketToVAElement.classList.add(
-                    "loading") // Makes the button disabled and spin during transaction
+                submitTotalPacketToVAElement.classList.add("loading") // Makes the button disabled and spin during transaction
 
                 axios.post("PHP_SCRIPTS/UPLOAD_TO_VA.php", veteranFormData)
-                    .then(function (response) {
+                    .then(function(response) {
 
                         submitTotalPacketToVAElement.disabled = false
                         addAttachmentButtonElement.disabled = false
@@ -399,10 +398,11 @@
                         let modalMessage = ""
                         let modalTitle = ""
 
-                        if (response.data == "UPLOAD SUCCESSFUL") {
+                        if(response.data == "UPLOAD SUCCESSFUL") {
                             modalTitle = "Upload Successful"
                             modalMessage = "Packet Uploaded Successfully to the VA"
-                        } else {
+                        }
+                        else {
                             modalTitle = "Upload Failed"
                             modalMessage = "There was a problem uploading the packet"
                         }
@@ -413,7 +413,8 @@
 
                     })
 
-            } else {
+            }
+            else {
                 alert(`"CANNOT PROCEED WITH UPLOAD\r\n${reasonUploadNotAllowed}`)
             }
 
@@ -422,6 +423,7 @@
 
 
     })
+
 </script>
 
 </html>
