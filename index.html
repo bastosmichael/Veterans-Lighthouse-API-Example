@@ -201,14 +201,10 @@
                         const veteranStatus = veteranPacketStatuses[i].veteranStatus
                         const veteranFullName = veteranPacketStatuses[i].veteranFullName
 
-                        tableHTML = `${tableHTML} <tr>
-                                                        <td>${veteranFullName}</td>
-                                                        <td>${veteranGUID}</td>
-                                                        <td>${veteranStatus}</td>
-                                                    </tr>`
+                        tableHTML = `${tableHTML}<tr><td>${veteranFullName}</td><td>${veteranGUID}</td><td>${veteranStatus}</td></tr>`
                     }
 
-                    tableHTML = `${tableHTML} </tbody></table>`
+                    tableHTML = `${tableHTML}</tbody></table>`
 
                     const tableHTMLPurified = DOMPurify.sanitize(tableHTML)
 
