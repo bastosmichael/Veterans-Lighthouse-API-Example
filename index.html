@@ -336,7 +336,7 @@
             let veteranFormData = new FormData()
 
             // This is here because the directory created contains the veteran's first name and last name
-            veteranFormData.append("veteranFormInformation", JSON.stringify(veteranMetadataObj))
+            veteranFormData.append("veteranFormInformation", JSON.stringify({"veteranFirstName": veteranMetadataObj.veteranFirstName, "veteranLastName": veteranMetadataObj.veteranLastName}))
 
             // Sends the metadata.json BLOB, as metadata.json
             veteranFormData.append("metadata", veteranMetadataBLOB, "metadata.json")
@@ -399,7 +399,7 @@
                         if(response.data == "UPLOAD SUCCESSFUL") {
                             modalTitle = "Upload Successful"
                             modalMessage = "Packet Uploaded Successfully to the VA"
-                        } else {
+                        }else {
                             modalTitle = "Upload Failed"
                             modalMessage = "There was a problem uploading the packet"
                         }
