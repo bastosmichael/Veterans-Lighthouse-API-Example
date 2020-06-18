@@ -164,16 +164,12 @@
 <script>
     window.addEventListener('load', (event) => {
 
-        //SETS VARIABLES FOR DOCUMENT ID ELEMENTS. ANY ELEMENT OCCURING MORE THAN ONCE GOES HERE
-
         const showPacketsInCirculationElement = document.getElementById("showPacketsInCirculation")
         const showUploadFormElement = document.getElementById("showUploadForm")
         const submitTotalPacketToVAElement = document.getElementById("submitTotalPacketToVA")
         const addAttachmentButtonElement = document.getElementById("addAttachmentButton")
         const uploadStatusModalElement = document.getElementById("uploadStatusModal")
 
-
-        //USED FOR GENERATING LINK FOR REMOVE BUTTON
 
         function grabPacketStatuses() {
 
@@ -185,16 +181,16 @@
                     let veteranPacketStatuses = response.data
 
                     let tableHTML = `<table class='table table-striped table-hover'>
-                    
-                                        <thead>
-                                            <tr>
-                                                <th>Veteran Name</th>
-                                                <th>GUID</th>
-                                                <th>Status</th>
-                                            </tr>
-                                        </thead>
 
-                                        <tbody>`
+                                            <thead>
+                                                <tr>
+                                                    <th>Veteran Name</th>
+                                                    <th>GUID</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                            </thead>
+
+                                            <tbody>`
 
                     for (let i = 0; i < veteranPacketStatuses.length; i++) {
 
@@ -202,14 +198,14 @@
                         const veteranStatus = veteranPacketStatuses[i].veteranStatus
                         const veteranFullName = veteranPacketStatuses[i].veteranFullName
 
-                        tableHTML = tableHTML + `<tr>
-                                                    <td>${veteranFullName}</td>
-                                                    <td>${veteranStatus}</td>
-                                                    <td>${veteranFullName}</td>
-                                                </tr>`
+                        tableHTML = `${tableHTML} <tr>
+                                                        <td>${veteranFullName}</td>
+                                                        <td>${veteranGUID}</td>
+                                                        <td>${veteranStatus}</td>
+                                                    </tr>`
                     }
 
-                    tableHTML = tableHTML + "</tbody></table>"
+                    tableHTML = `${tableHTML} </tbody></table>`
 
                     const tableHTMLPurified = DOMPurify.sanitize(tableHTML)
 
@@ -229,8 +225,9 @@
         for (let i = 0; i < menuElements.length; i++) {
 
             menuElements[i].addEventListener("click", function (event) {
+
                 event.preventDefault()
-                let linkedClicked = event.target.innerHTML
+                let linkedClicked = event.target.innerText
 
                 showUploadFormElement.hidden = true
                 showPacketsInCirculationElement.hidden = true
@@ -267,15 +264,16 @@
 
             attachmentCounter = attachmentCounter + 1
 
-            const newAttachmentOption = '<div class="divider text-center" data-content=""></div><br>' +
-                '<div class="columns">' +
-                '<div class="form-group column col-4 col-mx-auto">' +
-                '<label class="form-label" for="attachment' + attachmentCounter + '">Attachment ' +
-                attachmentCounter + '</label>' +
-                '<input class="form-input" type="file" accept=".pdf" id="attachment' +
-                attachmentCounter +
-                '"placeholder="Attachment ' + attachmentCounter + '">' +
-                '</div></div>'
+            const newAttachmentOption = `<div class="divider text-center" data-content=""></div><br>
+
+                                                    <div class="columns">
+
+                                                        <div class="form-group column col-4 col-mx-auto">
+                                                            <label class="form-label" for="attachment${attachmentCounter}">Attachment ${attachmentCounter}</label>
+                                                            <input class="form-input" type="file" accept=".pdf" id="attachment${attachmentCounter}" placeholder="Attachment ${attachmentCounter}">
+                                                        </div>
+
+                                                    </div>`
 
             const newAttachmentOptionSanitized = DOMPurify.sanitize(newAttachmentOption)
 
@@ -293,12 +291,14 @@
 
         submitTotalPacketToVAElement.addEventListener("click", function (event) {
 
-            let proceedWithUploadFlag = true
-            let reasonUploadNotAllowed = ""
-
             event.preventDefault()
 
-            //Bundles the Veteran's Metadata as an object for transmit
+            //HANDLES MAIN FILE ELEMENT
+
+            const veteranMainFileElement = document.getElementById("veteranMainFile")
+            const veteranMainFilePDF = veteranMainFileElement.files[0]
+
+            //SETS ALL DATA TO BE USED FOR THE METADATA TRANSACTION
 
             const veteranFirstName = document.getElementById("veteranFirstName").value
             const veteranLastName = document.getElementById("veteranLastName").value
@@ -306,6 +306,13 @@
             const veteranZipCode = document.getElementById("veteranZipCode").value
             const vaUploadSource = document.getElementById("veteranUploadSource").value
             const vaDocType = document.getElementById("veteranDocType").value
+
+            //MESSAGE HANDLING. MAINLY USED FOR FILE VALIDATION
+
+            let proceedWithUploadFlag = true
+            let reasonUploadNotAllowed = ""
+
+            //Bundles the Veteran's Metadata as an object for transmit
 
             const veteranMetadataObj = {
                 "veteranFirstName": veteranFirstName,
@@ -316,8 +323,6 @@
                 "docType": vaDocType
             }
 
-            console.log(veteranMetadataObj)
-
             //Turns the Metadata into a BLOB file. This make it EASIER FOR TRANMISSION when uploading to the VA
 
             veteranMetadataBLOB = new Blob([JSON.stringify(veteranMetadataObj)], {
@@ -326,21 +331,19 @@
 
             let veteranFormData = new FormData()
 
-            veteranFormData.append("veteranFormInformation", JSON.stringify(
-                veteranMetadataObj
-            )) // This is here because the directory created contains the veteran's first name and last name
-            veteranFormData.append("metadata", veteranMetadataBLOB,
-                "metadata.json") // Sends the metadata.json BLOB, as metadata.json
+            // This is here because the directory created contains the veteran's first name and last name
+            veteranFormData.append("veteranFormInformation", JSON.stringify(veteranMetadataObj))
 
-            if (document.getElementById("veteranMainFile").files[0].type == "application/pdf") {
+            // Sends the metadata.json BLOB, as metadata.json
+            veteranFormData.append("metadata", veteranMetadataBLOB, "metadata.json")
 
-                veteranFormData.append("content", document.getElementById("veteranMainFile").files[0],
+            if (veteranMainFilePDF.type == "application/pdf") {
+                veteranFormData.append("content", veteranMainFilePDF,
                     "content.pdf") // Sends the main pdf as content.pdf
-
             } else {
                 proceedWithUploadFlag = 0
-                reasonUploadNotAllowed = reasonUploadNotAllowed +
-                    "MAIN FILE IS VALID FILE TYPE, MUST BE PDF"
+                reasonUploadNotAllowed =
+                    `${reasonUploadNotAllowed} MAIN FILE IS AN INVALID FILE TYPE, MUST BE PDF\r\n`
             }
 
             //Determines if attachments exists or not
@@ -354,17 +357,22 @@
                     const fileElementName = "attachment" +
                         trueElementIteration // fileElementName, for finding the ID
 
-                    if (document.getElementById(fileElementName).files[0].type == "application/pdf") {
+                    const fileElementNameIDRef = document.getElementById(fileElementName)
+                    const attachmentFilePDF = fileElementNameIDRef.files[0]
 
-                        const fileElementNameOnDisk = fileElementName +
-                            ".pdf" // fileElementName + pdf, so for example, attachment1.pdf
-                        veteranFormData.append(fileElementName, document.getElementById(fileElementName)
-                            .files[0], fileElementNameOnDisk)
+
+                    if (attachmentFilePDF.type == "application/pdf") {
+
+                        const fileElementNameOnDisk =
+                            `${fileElementName}.pdf` // fileElementName + pdf, so for example, attachment1.pdf
+
+                        veteranFormData.append(fileElementName, attachmentFilePDF,
+                            fileElementNameOnDisk)
 
                     } else {
                         proceedWithUploadFlag = false
-                        reasonUploadNotAllowed = reasonUploadNotAllowed + "Attachment " +
-                            attachmentCounter + " is NOT a PDF"
+                        reasonUploadNotAllowed =
+                            `${reasonUploadNotAllowed} Attachment ${trueElementIteration} is NOT a PDF\r\n`
                     }
 
                 }
@@ -388,8 +396,6 @@
                         addAttachmentButtonElement.disabled = false
                         submitTotalPacketToVAElement.classList.remove("loading")
 
-                        attachmentCounter = 0
-
                         let modalMessage = ""
                         let modalTitle = ""
 
@@ -408,7 +414,7 @@
                     })
 
             } else {
-                alert("CANNOT PROCEED WITH UPLOAD\r\n" + reasonUploadNotAllowed)
+                alert(`"CANNOT PROCEED WITH UPLOAD\r\n${reasonUploadNotAllowed}`)
             }
 
         })
