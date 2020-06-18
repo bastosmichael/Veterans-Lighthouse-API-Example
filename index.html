@@ -158,24 +158,20 @@
 
     </div>
 
-    <div class="modal" id="updateStatusOfAllPacketsModal">
-
-        <div class="modal-container">
-
-            <div class="modal-header">
-                <a href="#close" class="btn btn-clear float-right" aria-label="Close" id="closeStatusModal"></a>
-                <div class="modal-title h5" id="uploadModalTitle">Update Status Of All Packets Modal</div>
-            </div>
-
-        </div>
-
-    </div>
-
 
 </body>
 
 <script>
     window.addEventListener('load', (event) => {
+
+        //SETS VARIABLES FOR DOCUMENT ID ELEMENTS. ANY ELEMENT OCCURING MORE THAN ONCE GOES HERE
+
+        const showPacketsInCirculationElement = document.getElementById("showPacketsInCirculation")
+        const showUploadFormElement = document.getElementById("showUploadForm")
+        const submitTotalPacketToVAElement = document.getElementById("submitTotalPacketToVA")
+        const addAttachmentButtonElement = document.getElementById("addAttachmentButton")
+        const uploadStatusModalElement = document.getElementById("uploadStatusModal")
+
 
         //USED FOR GENERATING LINK FOR REMOVE BUTTON
 
@@ -185,18 +181,18 @@
 
             axios.post("PHP_SCRIPTS/GRAB_VETERAN_STATUSES.php")
                 .then(function (response) {
-                    var tableHTML = ""
-                    var veteranPacketStatuses = response.data
 
-                    tableHTML = "<table class='table table-striped table-hover'><thead>" +
+                    let veteranPacketStatuses = response.data
+
+                    let tableHTML = "<table class='table table-striped table-hover'><thead>" +
                         "<tr><th>Veteran Name</th><th>GUID</th><th>Status</th>" +
-                        "<tbody>"
+                        "</tr></thead><tbody>"
 
                     for (var i = 0; i < veteranPacketStatuses.length; i++) {
 
-                        var veteranGUID = veteranPacketStatuses[i].veteranGUID
-                        var veteranStatus = veteranPacketStatuses[i].veteranStatus
-                        var veteranFullName = veteranPacketStatuses[i].veteranFullName
+                        const veteranGUID = veteranPacketStatuses[i].veteranGUID
+                        const veteranStatus = veteranPacketStatuses[i].veteranStatus
+                        const veteranFullName = veteranPacketStatuses[i].veteranFullName
 
                         tableHTML = tableHTML + "<tr><td>" + veteranFullName + "</td><td>" + veteranGUID +
                             "</td><td>" + veteranStatus + "</td></tr>"
@@ -204,40 +200,40 @@
 
                     tableHTML = tableHTML + "</tbody></table>"
 
-                    var tableHTMLPurified = DOMPurify.sanitize(tableHTML)
+                    const tableHTMLPurified = DOMPurify.sanitize(tableHTML)
 
-                    document.getElementById("showPacketsInCirculation").innerHTML = tableHTMLPurified
+                    showPacketsInCirculationElement.innerHTML = tableHTMLPurified
 
                 })
         }
 
-        document.getElementById("showPacketsInCirculation").hidden = true
+        showPacketsInCirculationElement.hidden = true
 
-        var attachmentCounter = 0 // Attachment Counter for Upload Screen
+        let attachmentCounter = 0 // Attachment Counter for Upload Screen
 
         //Loops through all menu items and adds the event listener to each item, switch statement below determines which screen to present
 
-        var menuElements = document.getElementsByClassName("menuOptions")
+        let menuElements = document.getElementsByClassName("menuOptions")
 
         for (var i = 0; i < menuElements.length; i++) {
 
             menuElements[i].addEventListener("click", function (event) {
                 event.preventDefault()
-                var linkedClicked = event.target.innerHTML
+                let linkedClicked = event.target.innerHTML
 
-                document.getElementById("showUploadForm").hidden = true
-                document.getElementById("showPacketsInCirculation").hidden = true
+                showUploadFormElement.hidden = true
+                showPacketsInCirculationElement.hidden = true
 
                 //THIS IS A SWITCH STATEMENT INSTEAD OF A IF/ELSEIF IN CASE YOU WANT TO ADD MORE OPTIONS, JUST PLUG AND PLAY
 
                 switch (linkedClicked) {
 
                     case "Upload Packet":
-                        document.getElementById("showUploadForm").hidden = false
+                        showUploadFormElement.hidden = false
                         break;
 
                     case "View Packets in Circulation":
-                        document.getElementById("showPacketsInCirculation").hidden = false
+                        showPacketsInCirculationElement.hidden = false
                         grabPacketStatuses()
                         break;
                 }
@@ -250,17 +246,17 @@
 
         document.getElementById("closeStatusModal").addEventListener("click", function (event) {
             event.preventDefault()
-            document.getElementById("uploadStatusModal").classList.remove("active")
+            uploadStatusModalElement.classList.remove("active")
         })
 
 
         //Event Listener for adding an attachment. Real world example you might want to add a remove button
 
-        document.getElementById("addAttachmentButton").addEventListener("click", function () {
+        addAttachmentButtonElement.addEventListener("click", function () {
 
             attachmentCounter = attachmentCounter + 1
 
-            var newAttachmentOption = '<div class="divider text-center" data-content=""></div><br>' +
+            const newAttachmentOption = '<div class="divider text-center" data-content=""></div><br>' +
                 '<div class="columns">' +
                 '<div class="form-group column col-4 col-mx-auto">' +
                 '<label class="form-label" for="attachment' + attachmentCounter + '">Attachment ' +
@@ -270,37 +266,46 @@
                 '"placeholder="Attachment ' + attachmentCounter + '">' +
                 '</div></div>'
 
-            var newAttachmentOptionSanitized = DOMPurify.sanitize(newAttachmentOption)
+            const newAttachmentOptionSanitized = DOMPurify.sanitize(newAttachmentOption)
 
-            var newAttachmentOptionDIV = document.createElement('div')
+            const newAttachmentOptionDIV = document.createElement('div')
             newAttachmentOptionDIV.setAttribute("class", "attachmentDOMDIV")
 
             newAttachmentOptionDIV.innerHTML = newAttachmentOptionSanitized
 
-            var attachmentUploadDIV = document.getElementById('attachmentsForUpload')
+            const attachmentUploadDIV = document.getElementById('attachmentsForUpload')
             attachmentUploadDIV.before(newAttachmentOptionDIV)
 
         })
 
         //Handles the submission of the packet to the VA
 
-        document.getElementById("submitTotalPacketToVA").addEventListener("click", function (event) {
+        submitTotalPacketToVAElement.addEventListener("click", function (event) {
 
-            var proceedWithUploadFlag = true
-            var reasonUploadNotAllowed = ""
+            let proceedWithUploadFlag = true
+            let reasonUploadNotAllowed = ""
 
             event.preventDefault()
 
             //Bundles the Veteran's Metadata as an object for transmit
 
-            var veteranMetadataObj = {
-                "veteranFirstName": document.getElementById("veteranFirstName").value,
-                "veteranLastName": document.getElementById("veteranLastName").value,
-                "fileNumber": document.getElementById("veteranFileNumber").value,
-                "zipCode": document.getElementById("veteranZipCode").value,
-                "source": document.getElementById("veteranUploadSource").value,
-                "docType": document.getElementById("veteranDocType").value
+            const veteranFirstName = document.getElementById("veteranFirstName").value
+            const veteranLastName = document.getElementById("veteranLastName").value
+            const veteranFileNumber = document.getElementById("veteranFileNumber").value
+            const veteranZipCode = document.getElementById("veteranZipCode").value
+            const vaUploadSource = document.getElementById("veteranUploadSource").value
+            const vaDocType = document.getElementById("veteranDocType").value
+
+            const veteranMetadataObj = {
+                "veteranFirstName": veteranFirstName,
+                "veteranLastName": veteranLastName,
+                "fileNumber": veteranFileNumber,
+                "zipCode": veteranZipCode,
+                "source": vaUploadSource,
+                "docType": vaDocType
             }
+
+            console.log(veteranMetadataObj)
 
             //Turns the Metadata into a BLOB file. This make it EASIER FOR TRANMISSION when uploading to the VA
 
@@ -324,7 +329,7 @@
             } else {
                 proceedWithUploadFlag = 0
                 reasonUploadNotAllowed = reasonUploadNotAllowed +
-                    "MAIN FILE IS NOT A VALID FILE TYPE, MUST BE PDF"
+                    "MAIN FILE IS VALID FILE TYPE, MUST BE PDF"
             }
 
             //Determines if attachments exists or not
@@ -333,14 +338,14 @@
 
                 for (var i = 0; i < attachmentCounter; i++) {
 
-                    var trueElementIteration = i + 1
+                    const trueElementIteration = i + 1
 
-                    var fileElementName = "attachment" +
+                    const fileElementName = "attachment" +
                         trueElementIteration // fileElementName, for finding the ID
 
                     if (document.getElementById(fileElementName).files[0].type == "application/pdf") {
 
-                        var fileElementNameOnDisk = fileElementName +
+                        const fileElementNameOnDisk = fileElementName +
                             ".pdf" // fileElementName + pdf, so for example, attachment1.pdf
                         veteranFormData.append(fileElementName, document.getElementById(fileElementName)
                             .files[0], fileElementNameOnDisk)
@@ -359,22 +364,23 @@
 
             if (proceedWithUploadFlag == true) {
 
-                document.getElementById("submitTotalPacketToVA").disabled = true
-                document.getElementById("addAttachmentButton").disabled = true
+                submitTotalPacketToVAElement.disabled = true
+                addAttachmentButtonElement.disabled = true
 
-                document.getElementById("submitTotalPacketToVA").classList.add(
+                submitTotalPacketToVAElement.classList.add(
                     "loading") // Makes the button disabled and spin during transaction
 
                 axios.post("PHP_SCRIPTS/UPLOAD_TO_VA.php", veteranFormData)
                     .then(function (response) {
 
-                        document.getElementById("submitTotalPacketToVA").disabled = false
-                        document.getElementById("addAttachmentButton").disabled = false
-                        document.getElementById("submitTotalPacketToVA").classList.remove("loading")
+                        submitTotalPacketToVAElement.disabled = false
+                        addAttachmentButtonElement.disabled = false
+                        submitTotalPacketToVAElement.classList.remove("loading")
+
                         attachmentCounter = 0
 
-                        var modalMessage = ""
-                        var modalTitle = ""
+                        let modalMessage = ""
+                        let modalTitle = ""
 
                         if (response.data == "UPLOAD SUCCESSFUL") {
                             modalTitle = "Upload Successful"
@@ -386,7 +392,7 @@
 
                         document.getElementById("uploadModalTitle").innerHTML = modalTitle
                         document.getElementById("modalUploadMessage").innerHTML = modalMessage
-                        document.getElementById("uploadStatusModal").classList.add("active")
+                        uploadStatusModalElement.classList.add("active")
 
                     })
 
