@@ -343,8 +343,7 @@
 
             if(veteranMainFilePDF.type == "application/pdf") {
                 veteranFormData.append("content", veteranMainFilePDF, "content.pdf") // Sends the main pdf as content.pdf
-            }
-            else {
+            } else {
                 proceedWithUploadFlag = 0
                 reasonUploadNotAllowed = `${reasonUploadNotAllowed} MAIN FILE IS AN INVALID FILE TYPE, MUST BE PDF\r\n`
             }
@@ -369,8 +368,7 @@
 
                         veteranFormData.append(fileElementName,attachmentFilePDF,fileElementNameOnDisk)
 
-                    }
-                    else {
+                    } else {
                         proceedWithUploadFlag = false
                         reasonUploadNotAllowed = `${reasonUploadNotAllowed} Attachment ${trueElementIteration} is NOT a PDF\r\n`
                     }
@@ -401,8 +399,7 @@
                         if(response.data == "UPLOAD SUCCESSFUL") {
                             modalTitle = "Upload Successful"
                             modalMessage = "Packet Uploaded Successfully to the VA"
-                        }
-                        else {
+                        } else {
                             modalTitle = "Upload Failed"
                             modalMessage = "There was a problem uploading the packet"
                         }
@@ -413,8 +410,7 @@
 
                     })
 
-            }
-            else {
+            } else {
                 alert(`"CANNOT PROCEED WITH UPLOAD\r\n${reasonUploadNotAllowed}`)
             }
 
