@@ -33,7 +33,6 @@ if __name__ == "__main__":
             current_status = veteran_text_file_split[1]
 
             if current_status != "VBMS":
-
                 ids_for_report.append(veteran_guid)
 
         except Exception as e:
