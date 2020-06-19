@@ -58,7 +58,7 @@ The Python scripts provided pulls statuses back from the VA API. It can be ran m
 
 The first way is to get each status back for each packet one by one. This is the method we use at Cabarrus County(Because we use Laserfiche Workflow) and our volume is so low(We may have 10-15 packets in circulation at any given time). This method is accomplished by using this URL https://sandbox-api.va.gov/services/vba_documents/v1/uploads/GUID-GOES-HERE. This will return back only the status for the particular GUID requested.
 
-The second way, which is great for higher volume VSOs, is the bulk status method. This method you pass a list of GUIDS in ONE call to URL https://sandbox-api.va.gov/services/vba_documents/v1/uploads/report. The GUIDS are sent in JSON format.
+The second way, which is great for higher volume VSOs, is the bulk status method. Using this method you pass a list of GUIDS in ONE call to URL https://sandbox-api.va.gov/services/vba_documents/v1/uploads/report. The GUIDS are sent in JSON format.
 
 ### Storing your API key
 ---
