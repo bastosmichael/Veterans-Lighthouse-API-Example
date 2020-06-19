@@ -54,7 +54,7 @@ GRAB_VETERAN_STATUSES.php Web Service - This web service loops through all the f
 
 ### Python Script
 ---
-The Python scripts provided pulls statuses back from the VA API. It can be ran manually or put on a scheduled task. We provide scripts for both methods the VA allows. We don't actually USE the Python scripts at Cabarrus County. We use Laserfiche Workflow to pull the statuses back. but not everyone HAS Laserfiche, and Python provides a quick and easy way using requests library to grab the statuses back of all packets in circulation.
+The Python scripts provided pulls statuses back from the VA API. It can be ran manually or put on a scheduled task. We provide scripts for both methods the VA allows. We don't actually USE the Python scripts at Cabarrus County. We use Laserfiche Workflow to pull the statuses back. Not everyone HAS Laserfiche, so instead Python provides a quick and easy way using the requests library to grab the statuses back of all packets in circulation.
 
 The first way is to get each status back for each packet one by one. This is the method we use at Cabarrus County(Because we use Laserfiche Workflow) and our volume is so low(We may have 10-15 packets in circulation at any given time). This method is accomplished by using this URL https://sandbox-api.va.gov/services/vba_documents/v1/uploads/GUID-GOES-HERE. This will return back only the status for the particular GUID requested.
 
