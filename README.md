@@ -35,6 +35,15 @@ This setup is somewhat different than our internal application, here are the mai
 
 The reason for these differences is simple, We wanted to build a lightweight, open source application that you could pull down, throw on a server with PHP/Python installed, and start experimenting with right away and view all the VA API calls and how they work. **THIS IS NOT MEANT TO BE A PRODUCTION APP**, but rather, a way for you to lay the ground work FOR a production app and give you straight examples of how you can start integrating with the VA API out of the box.
 
+### Getting started
+
+To get started using this application, you'll need ensure a few things.
+
+1. Be sure that you have a web server that has PHP installed. If you want to pull statuses back after upload, be sure Python is installed as well.
+2. Be sure that PHP cURL has been properly setup and configured to handle HTTPS calls.
+3. Be sure you have a method setup for retrieving your API key. Most of these examples you can plug and play for dev, but please take note of the warning at the bottom.
+4. Be sure the Python scripts point to the path that "FILES_IN_CIRCULATION" exists.
+
 ### Front end
 ---
 Once you pull down all the files you will see an index.html file. The index.html file is the main front end file and is setup as a single page application with two pages(div tags). The first div tag is a file uploader. The second div tag is a table that has all GUIDS and statuses in circulation contained in a table.
