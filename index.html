@@ -223,8 +223,7 @@
                         const veteranStatus = veteranPacketStatuses[i].veteranStatus
                         const veteranFullName = veteranPacketStatuses[i].veteranFullName
 
-                        tableHTML =
-                            `${tableHTML}<tr><td>${veteranFullName}</td><td>${veteranGUID}</td><td>${veteranStatus}</td></tr>`
+                        tableHTML = `${tableHTML}<tr><td>${veteranFullName}</td><td>${veteranGUID}</td><td>${veteranStatus}</td></tr>`
                     }
 
                     tableHTML = `${tableHTML}</tbody></table>`
@@ -245,10 +244,9 @@
                                         <div class="columns">
 
                                             <div class="form-group column col-4 col-mx-auto">
-                                                <label class="form-label" for="attachment${attachmentCounter}">Attachment ${attachmentCounter}</label>
-                                                <input class="form-input" type="file" accept=".pdf" id="attachment${attachmentCounter}" placeholder="Attachment ${attachmentCounter}">
-                                                
-                                                <button class="btn btn-primary" type="button" data-removeNumber=${attachmentCounter}>Remove Attachment</button>
+                                                <label class="form-label attachmentLabel" for="attachment${attachmentCounter}">Attachment ${attachmentCounter}</label>
+                                                <input class="form-input attachmentFileInput" type="file" accept=".pdf" id="attachment${attachmentCounter}" placeholder="Attachment ${attachmentCounter}">
+                                                <button class="btn btn-primary attachmentRemoveButton" type="button" data-removenumber=${attachmentCounter}>Remove Attachment</button>
 
                                             </div>
 
@@ -258,13 +256,65 @@
 
             const newAttachmentOptionDIV = document.createElement('div')
             newAttachmentOptionDIV.setAttribute("class", "attachmentDOMDIV")
-            newAttachmentOptionDIV.dataset.attachmentBinding = attachmentCounter
+            newAttachmentOptionDIV.setAttribute("id", `attachment${attachmentCounter}Main`)
 
             newAttachmentOptionDIV.innerHTML = newAttachmentOptionSanitized
 
             const attachmentUploadDIV = document.getElementById('attachmentsForUpload')
             attachmentUploadDIV.before(newAttachmentOptionDIV)
 
+        }
+
+        function removeAttachmentElement(attachmentNumberForRemoval) {
+
+            const idStringToFind = `attachment${attachmentNumberForRemoval}Main`
+            const attachmentElement = document.getElementById(idStringToFind)
+            attachmentElement.remove()
+            attachmentCounter = attachmentCounter - 1
+
+            if (attachmentCounter > 0) {
+
+                //REINDEXES ALL ATTACHMENT ATTRIBUTES
+
+                let attachmentCounterForElements = 1
+
+                const fileAttachmentElements = document.getElementsByClassName('attachmentDOMDIV')
+
+                for (var i = 0; i < fileAttachmentElements.length; i++) {
+
+                    //SETS THE MAIN DIV ATTRIBUTES
+
+                    fileAttachmentElements[i].setAttribute("id",
+                        `attachment${attachmentCounterForElements}Main`)
+
+                    //SETS THE LABEL ATTRIBUTES
+
+                    attachmentElementLabelTag = fileAttachmentElements[i].getElementsByClassName("attachmentLabel")[0]
+
+                    attachmentElementLabelTag.setAttribute("for", `attachment${attachmentCounterForElements}`)
+                    attachmentElementLabelTag.innerText = `Attachment ${attachmentCounterForElements}`
+
+                    //SETS THE FILE ATTRIBUTES
+
+                    attachmentFileInputTag = fileAttachmentElements[i].getElementsByClassName("attachmentFileInput")[0]
+
+                    attachmentFileInputTag.setAttribute("placeholder",
+                        `Attachment ${attachmentCounterForElements}`)
+                    attachmentFileInputTag.setAttribute("id", `attachment${attachmentCounterForElements}`)
+
+
+                    //SETS THE BUTTON DATA BINDING ATTRIBUTE
+
+                    attachmentRemoveButton = fileAttachmentElements[i].getElementsByClassName("attachmentRemoveButton")[0]
+                    attachmentRemoveButton.dataset.removenumber = attachmentCounterForElements
+
+                    attachmentCounterForElements = attachmentCounterForElements + 1
+
+
+
+                }
+
+            }
         }
 
         function submitPacketToVA() {
@@ -401,7 +451,7 @@
 
         document.addEventListener('click', function (event) {
 
-            
+
             if (event.target.matches("#addAttachmentButton")) {
                 addAttachmentFile()
             }
@@ -417,9 +467,14 @@
                 uploadStatusModalElement.classList.remove("active") // CLOSES MODAL FROM UPLOAD SCREEN
             }
 
-            if(event.target.matches("#submitTotalPacketToVA")) {
+            if (event.target.matches("#submitTotalPacketToVA")) {
                 event.preventDefault()
                 submitPacketToVA()
+            }
+
+            if (event.target.matches(".attachmentRemoveButton")) {
+                const attachmentNumberClicked = event.target.dataset.removenumber
+                removeAttachmentElement(attachmentNumberClicked)
             }
 
         })
