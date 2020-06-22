@@ -284,8 +284,7 @@
 
                     //SETS THE MAIN DIV ATTRIBUTES
 
-                    fileAttachmentElements[i].setAttribute("id",
-                        `attachment${attachmentCounterForElements}Main`)
+                    fileAttachmentElements[i].setAttribute("id", `attachment${attachmentCounterForElements}Main`)
 
                     //SETS THE LABEL ATTRIBUTES
 
@@ -298,8 +297,7 @@
 
                     attachmentFileInputTag = fileAttachmentElements[i].getElementsByClassName("attachmentFileInput")[0]
 
-                    attachmentFileInputTag.setAttribute("placeholder",
-                        `Attachment ${attachmentCounterForElements}`)
+                    attachmentFileInputTag.setAttribute("placeholder", `Attachment ${attachmentCounterForElements}`)
                     attachmentFileInputTag.setAttribute("id", `attachment${attachmentCounterForElements}`)
 
 
@@ -367,12 +365,10 @@
             veteranFormData.append("metadata", veteranMetadataBLOB, "metadata.json")
 
             if (veteranMainFilePDF.type == "application/pdf") {
-                veteranFormData.append("content", veteranMainFilePDF,
-                    "content.pdf") // Sends the main pdf as content.pdf
+                veteranFormData.append("content", veteranMainFilePDF, "content.pdf") // Sends the main pdf as content.pdf
             } else {
                 proceedWithUploadFlag = 0
-                reasonUploadNotAllowed =
-                    `${reasonUploadNotAllowed} MAIN FILE IS AN INVALID FILE TYPE, MUST BE PDF\r\n`
+                reasonUploadNotAllowed = `${reasonUploadNotAllowed} MAIN FILE IS AN INVALID FILE TYPE, MUST BE PDF\r\n`
             }
 
             //Determines if attachments exists or not
@@ -383,8 +379,7 @@
 
                     const trueElementIteration = i + 1
 
-                    const fileElementName =
-                        `attachment${trueElementIteration}` // fileElementName, for finding the ID
+                    const fileElementName = `attachment${trueElementIteration}` // fileElementName, for finding the ID
 
                     const fileElementNameIDRef = document.getElementById(fileElementName)
                     const attachmentFilePDF = fileElementNameIDRef.files[0]
@@ -392,16 +387,13 @@
 
                     if (attachmentFilePDF.type == "application/pdf") {
 
-                        const fileElementNameOnDisk =
-                            `${fileElementName}.pdf` // fileElementName + pdf, so for example, attachment1.pdf
+                        const fileElementNameOnDisk = `${fileElementName}.pdf` // fileElementName + pdf, so for example, attachment1.pdf
 
-                        veteranFormData.append(fileElementName, attachmentFilePDF,
-                            fileElementNameOnDisk)
+                        veteranFormData.append(fileElementName, attachmentFilePDF,fileElementNameOnDisk)
 
                     } else {
                         proceedWithUploadFlag = false
-                        reasonUploadNotAllowed =
-                            `${reasonUploadNotAllowed} Attachment ${trueElementIteration} is NOT a PDF\r\n`
+                        reasonUploadNotAllowed = `${reasonUploadNotAllowed} Attachment ${trueElementIteration} is NOT a PDF\r\n`
                     }
 
                 }
