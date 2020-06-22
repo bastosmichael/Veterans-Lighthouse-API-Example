@@ -41,7 +41,7 @@ To get started using this application, you'll need ensure a few things.
 
 1. Be sure that you have a web server that has PHP installed. If you want to pull statuses back after upload, be sure Python is installed as well.
 2. Be sure that PHP cURL has been properly setup and configured to handle HTTPS calls.
-3. Be sure you have a method setup for retrieving your API key. Most of these examples you can plug and play for dev, but please take note of the warning at the bottom.
+3. Be sure you have a method setup for retrieving your API key. Most of these examples you can plug and play for dev/test purposes, but please take note of the warning at the bottom.
 4. Be sure the Python scripts point to the path that "FILES_IN_CIRCULATION" exists.
 
 ### Front end
