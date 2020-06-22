@@ -52,7 +52,7 @@ UPLOAD_FILE_TO_VA.php Web Service - This web service is the POST web service for
 
 GRAB_VETERAN_STATUSES.php Web Service - This web service loops through all the files and directories, grabs the current status of each VA upload using glob, and renders them to a front end table.
 
-### Python Script
+### Python Scripts
 ---
 The Python scripts provided pulls statuses back from the VA API. It can be ran manually or put on a scheduled task. We provide scripts for both methods the VA allows. We don't actually USE the Python scripts at Cabarrus County. We use Laserfiche Workflow to pull the statuses back. Not everyone HAS Laserfiche, so instead Python provides a quick and easy way using the requests library to grab the statuses back of all packets in circulation.
 
