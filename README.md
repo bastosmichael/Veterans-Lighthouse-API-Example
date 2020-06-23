@@ -43,6 +43,7 @@ To get started using this application, you'll need ensure a few things.
 2. Be sure that PHP cURL has been properly setup and configured to handle HTTPS calls.
 3. Be sure you have a secure method setup for retrieving/storing your API key. Most of these examples you can plug and play for dev/test purposes, but please take note of the warning at the bottom.
 4. Be sure the Python scripts point to the path that "FILES_IN_CIRCULATION" exists.
+5. This application uses two Javascript libraries, Axios for handling the AJAX transactions and DOMPurify for extra protection client side. Both are included in the bundle and nothing extra needs to be done.
 
 ### Front end
 ---
