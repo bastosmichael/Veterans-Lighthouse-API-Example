@@ -261,7 +261,7 @@
             newAttachmentOptionDIV.innerHTML = newAttachmentOptionSanitized
 
             const attachmentUploadDIV = document.getElementById('attachmentsForUpload')
-            attachmentUploadDIV.before(newAttachmentOptionDIV)
+            attachmentUploadDIV.appendChild(newAttachmentOptionDIV)
 
         }
 
@@ -317,126 +317,125 @@
 
         function submitPacketToVA() {
 
-            //HANDLES MAIN FILE ELEMENT
+            try {
 
-            const veteranMainFileElement = document.getElementById("veteranMainFile")
-            const veteranMainFilePDF = veteranMainFileElement.files[0]
+                //HANDLES MAIN FILE ELEMENT
 
-            //SETS ALL DATA TO BE USED FOR THE METADATA TRANSACTION
+                const veteranMainFilePDF = document.getElementById("veteranMainFile").files[0]
 
-            const veteranFirstName = document.getElementById("veteranFirstName").value
-            const veteranLastName = document.getElementById("veteranLastName").value
-            const veteranFileNumber = document.getElementById("veteranFileNumber").value
-            const veteranZipCode = document.getElementById("veteranZipCode").value
-            const vaUploadSource = document.getElementById("veteranUploadSource").value
-            const vaDocType = document.getElementById("veteranDocType").value
+                //SETS ALL DATA TO BE USED FOR THE METADATA TRANSACTION
 
-            //MESSAGE HANDLING. MAINLY USED FOR FILE VALIDATION
+                const veteranFirstName = document.getElementById("veteranFirstName").value
+                const veteranLastName = document.getElementById("veteranLastName").value
+                const veteranFileNumber = document.getElementById("veteranFileNumber").value
+                const veteranZipCode = document.getElementById("veteranZipCode").value
+                const vaUploadSource = document.getElementById("veteranUploadSource").value
+                const vaDocType = document.getElementById("veteranDocType").value
 
-            let proceedWithUploadFlag = true
-            let reasonUploadNotAllowed = ""
+                //MESSAGE HANDLING. MAINLY USED FOR FILE VALIDATION
 
-            //Bundles the Veteran's Metadata as an object for transmit
+                let proceedWithUploadFlag = true
+                let reasonUploadNotAllowed = ""
 
-            const veteranMetadataObj = {
-                "veteranFirstName": veteranFirstName,
-                "veteranLastName": veteranLastName,
-                "fileNumber": veteranFileNumber,
-                "zipCode": veteranZipCode,
-                "source": vaUploadSource,
-                "docType": vaDocType
-            }
+                //Bundles the Veteran's Metadata as an object for transmit
 
-            //Turns the Metadata into a BLOB file. This make it EASIER FOR TRANMISSION when uploading to the VA
+                const veteranMetadataObj = {
+                    "veteranFirstName": veteranFirstName,
+                    "veteranLastName": veteranLastName,
+                    "fileNumber": veteranFileNumber,
+                    "zipCode": veteranZipCode,
+                    "source": vaUploadSource,
+                    "docType": vaDocType
+                }
 
-            veteranMetadataBLOB = new Blob([JSON.stringify(veteranMetadataObj)], {
-                type: "application/json"
-            })
+                //Turns the Metadata into a BLOB file. This make it EASIER FOR TRANMISSION when uploading to the VA
 
-            let veteranFormData = new FormData()
+                veteranMetadataBLOB = new Blob([JSON.stringify(veteranMetadataObj)], {
+                    type: "application/json"
+                })
 
-            // This is here because the directory created contains the veteran's first name and last name
-            veteranFormData.append("veteranFormInformation", JSON.stringify({
-                "veteranFirstName": veteranMetadataObj.veteranFirstName,
-                "veteranLastName": veteranMetadataObj.veteranLastName
-            }))
+                let veteranFormData = new FormData()
 
-            // Sends the metadata.json BLOB, as metadata.json
-            veteranFormData.append("metadata", veteranMetadataBLOB, "metadata.json")
+                // This is here because the directory created contains the veteran's first name and last name
+                veteranFormData.append("veteranFormInformation", JSON.stringify({
+                    "veteranFirstName": veteranMetadataObj.veteranFirstName,
+                    "veteranLastName": veteranMetadataObj.veteranLastName
+                }))
 
-            if (veteranMainFilePDF.type == "application/pdf") {
-                veteranFormData.append("content", veteranMainFilePDF, "content.pdf") // Sends the main pdf as content.pdf
-            } else {
-                proceedWithUploadFlag = 0
-                reasonUploadNotAllowed = `${reasonUploadNotAllowed} MAIN FILE IS AN INVALID FILE TYPE, MUST BE PDF\r\n`
-            }
+                // Sends the metadata.json BLOB, as metadata.json
+                veteranFormData.append("metadata", veteranMetadataBLOB, "metadata.json")
 
-            //Determines if attachments exists or not
+                if (veteranMainFilePDF.type == "application/pdf") {
+                    veteranFormData.append("content", veteranMainFilePDF, "content.pdf") // Sends the main pdf as content.pdf
+                } else {
+                    proceedWithUploadFlag = 0
+                    reasonUploadNotAllowed = `${reasonUploadNotAllowed} MAIN FILE IS AN INVALID FILE TYPE, MUST BE PDF\r\n`
+                }
 
-            if (attachmentCounter > 0) {
+                //Determines if attachments exists or not
 
-                for (let i = 0; i < attachmentCounter; i++) {
+                if (attachmentCounter > 0) {
 
-                    const trueElementIteration = i + 1
+                    for (let i = 0; i < attachmentCounter; i++) {
 
-                    const fileElementName = `attachment${trueElementIteration}` // fileElementName, for finding the ID
+                        const trueElementIteration = i + 1
 
-                    const fileElementNameIDRef = document.getElementById(fileElementName)
-                    const attachmentFilePDF = fileElementNameIDRef.files[0]
+                        const fileElementName = `attachment${trueElementIteration}` // fileElementName, for finding the ID
+                        const attachmentFilePDF = document.getElementById(fileElementName).files[0]
 
+                        if (attachmentFilePDF.type == "application/pdf") {
+                            const fileElementNameOnDisk = `${fileElementName}.pdf` // fileElementName + pdf, so for example, attachment1.pdf
+                            veteranFormData.append(fileElementName, attachmentFilePDF, fileElementNameOnDisk)
+                        } else {
+                            proceedWithUploadFlag = false
+                            reasonUploadNotAllowed = `${reasonUploadNotAllowed} Attachment ${trueElementIteration} is NOT a PDF\r\n`
+                        }
 
-                    if (attachmentFilePDF.type == "application/pdf") {
-
-                        const fileElementNameOnDisk = `${fileElementName}.pdf` // fileElementName + pdf, so for example, attachment1.pdf
-
-                        veteranFormData.append(fileElementName, attachmentFilePDF,fileElementNameOnDisk)
-
-                    } else {
-                        proceedWithUploadFlag = false
-                        reasonUploadNotAllowed = `${reasonUploadNotAllowed} Attachment ${trueElementIteration} is NOT a PDF\r\n`
                     }
 
                 }
 
+                //AXIOS handles post to the back end. Backend has cURL, backend handles the transaction to the VA
+
+                if (proceedWithUploadFlag == true) {
+
+                    submitTotalPacketToVAElement.disabled = true
+                    addAttachmentButtonElement.disabled = true
+
+                    submitTotalPacketToVAElement.classList.add(
+                        "loading") // Makes the button disabled and spin during transaction
+
+                    axios.post("PHP_SCRIPTS/UPLOAD_TO_VA.php", veteranFormData)
+                        .then(function (response) {
+
+                            submitTotalPacketToVAElement.disabled = false
+                            addAttachmentButtonElement.disabled = false
+                            submitTotalPacketToVAElement.classList.remove("loading")
+
+                            let modalMessage = ""
+                            let modalTitle = ""
+
+                            if (response.data == "UPLOAD SUCCESSFUL") {
+                                modalTitle = "Upload Successful"
+                                modalMessage = "Packet Uploaded Successfully to the VA"
+                            } else {
+                                modalTitle = "Upload Failed"
+                                modalMessage = "There was a problem uploading the packet"
+                            }
+
+                            document.getElementById("uploadModalTitle").innerHTML = modalTitle
+                            document.getElementById("modalUploadMessage").innerHTML = modalMessage
+                            uploadStatusModalElement.classList.add("active")
+
+                        })
+
+                } else {
+                    alert(`CANNOT PROCEED WITH UPLOAD\r\n${reasonUploadNotAllowed}`)
+                }
+            } catch(err) {
+                alert(`Error Uploading Files\r\n${err.message}`)
             }
 
-            //AXIOS handles post to the back end. Backend has cURL, backend handles the transaction to the VA
-
-            if (proceedWithUploadFlag == true) {
-
-                submitTotalPacketToVAElement.disabled = true
-                addAttachmentButtonElement.disabled = true
-
-                submitTotalPacketToVAElement.classList.add(
-                    "loading") // Makes the button disabled and spin during transaction
-
-                axios.post("PHP_SCRIPTS/UPLOAD_TO_VA.php", veteranFormData)
-                    .then(function (response) {
-
-                        submitTotalPacketToVAElement.disabled = false
-                        addAttachmentButtonElement.disabled = false
-                        submitTotalPacketToVAElement.classList.remove("loading")
-
-                        let modalMessage = ""
-                        let modalTitle = ""
-
-                        if (response.data == "UPLOAD SUCCESSFUL") {
-                            modalTitle = "Upload Successful"
-                            modalMessage = "Packet Uploaded Successfully to the VA"
-                        } else {
-                            modalTitle = "Upload Failed"
-                            modalMessage = "There was a problem uploading the packet"
-                        }
-
-                        document.getElementById("uploadModalTitle").innerHTML = modalTitle
-                        document.getElementById("modalUploadMessage").innerHTML = modalMessage
-                        uploadStatusModalElement.classList.add("active")
-
-                    })
-
-            } else {
-                alert(`CANNOT PROCEED WITH UPLOAD\r\n${reasonUploadNotAllowed}`)
-            }
         }
 
         //ACTUAL EVENT DELEGATION
