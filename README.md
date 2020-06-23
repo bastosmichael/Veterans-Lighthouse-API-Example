@@ -33,7 +33,7 @@ This setup is somewhat different than our internal application, here are the mai
 + This setup uses text files for status change tracking, our implementation uses a database.
 + Our form input is validated according to the specs under the VA Lighthouse Documentation.
 
-The reason for these differences is simple, We wanted to build a lightweight, open source application that you could pull down, throw on a server with PHP/Python installed, and start experimenting with right away. **THIS IS NOT MEANT TO BE A PRODUCTION APP**, but rather, a way for you to lay the ground work FOR a production app and give you lightweight examples of interacting with VA Lighthouse API.
+The reason for these differences is simple, We wanted to build a lightweight, open source application that you could pull down, throw on a server with PHP/Python installed, and start experimenting with right away. **THIS IS NOT MEANT TO BE A PRODUCTION APP**, but rather, a way for you to lay the ground work FOR a production app that gives you lightweight examples of interacting with VA Lighthouse API.
 
 ### Getting started
 ---
@@ -48,9 +48,9 @@ To get started using this application, you'll need ensure a few things.
 ---
 Once you pull down all the files you will see an index.html file. The index.html file is the main front end file and is setup as a single page application with two pages(div tags). The first div tag is a file uploader. The second div tag is a table that has all GUIDS and statuses in circulation contained in a table.
 
-The first page, as mentioned,is uploading a file to the VA. The front end for this is a form with a main file upload and the ability to create more file uploads via the "Add Attachment Button". We do validate main file types and attachments to be sure their PDFs, but ultimately, pattern matching for fields is left to your discretion. For more information on input validation in the API, please review to the VA Lighthouse API documentation.
+The first page, as mentioned,is uploading a file to the VA. The front end for this is a form with a main file upload and the ability to create attachment files via the "Add Attachment Button". We do validate all file types to ensure PDFs are being uploaded, but ultimately, pattern matching for fields is left to your discretion. For more information on input validation in the API, please review to the VA Lighthouse API documentation.
 
-The second page is a table that is generated in code by data recieved from a back end web service. It contains 
+The second page is a table that is generated in Javascript by data recieved from a back end web service. It contains the Veteran's Name, GUID, and Status for each packet uploaded and in circulation at the VA.
 
 
 ### Back end web services
@@ -61,9 +61,9 @@ GRAB_VETERAN_STATUSES.php Web Service - This web service loops through all the f
 
 ### Python Scripts
 ---
-The Python scripts provided pulls statuses back from the VA API. It can be ran manually or put on a scheduled task. We provide scripts for both methods the VA allows. We don't actually USE the Python scripts at Cabarrus County. We use Laserfiche Workflow to pull the statuses back. Not everyone HAS Laserfiche, so instead Python provides a quick and easy way using the requests library to grab the statuses back of all packets in circulation.
+The Python scripts provided pulls statuses back from the VA API. It can be executed manually or put on a scheduled task. We provide scripts for both methods the VA allows. We don't actually USE the Python scripts at Cabarrus County. We use Laserfiche Workflow to pull the statuses back. Not everyone HAS Laserfiche, so instead Python provides a quick and easy way using the requests library to grab the statuses back of all packets in circulation.
 
-The first way is to get each status back for each packet one by one. This is the method we use at Cabarrus County(Because we use Laserfiche Workflow) and our volume is so low(We may have 10-15 packets in circulation at any given time). This method is accomplished by using this URL https://sandbox-api.va.gov/services/vba_documents/v1/uploads/GUID-GOES-HERE. This will return back only the status for the particular GUID requested.
+The first way is to get each status back for each packet is do so one packet at a time. This is the method we use at Cabarrus County(Because we use Laserfiche Workflow) and our volume is so low(We may have 10-15 packets in circulation at any given time). This method is accomplished by using this URL https://sandbox-api.va.gov/services/vba_documents/v1/uploads/GUID-GOES-HERE. This will return back only the status for the particular GUID requested.
 
 The second way, which is great for higher volume VSOs, is the bulk status method. Using this method you pass a list of GUIDS in ONE call to URL https://sandbox-api.va.gov/services/vba_documents/v1/uploads/report. The GUIDS are sent in JSON format.
 
