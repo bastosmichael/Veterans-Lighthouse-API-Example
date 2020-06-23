@@ -68,9 +68,16 @@ The first way is to get each status back for each packet is do so one packet at 
 
 The second way, which is great for higher volume VSOs, is the bulk status method. Using this method you pass a list of GUIDS in ONE call to URL https://sandbox-api.va.gov/services/vba_documents/v1/uploads/report. The GUIDS are sent in JSON format.
 
+
 ### Storing your API key
 ---
 These scripts makes no assumptions about HOW YOU store your API key. For these examples you can plug and play, but please note, whenever you go live, the VA Lighthouse API team WILL want you to demo your app. **If your API key is not stored SAFELY AND SECURE THEY WILL NOT GIVE YOU ACCESS TO PRODUCTION.***
+
+### Links to resources used in this project
+
+1. Spectre CSS- https://picturepan2.github.io/spectre/
+2. Axios- https://github.com/axios/axios
+3. DOMPurify- https://github.com/cure53/DOMPurify
 
 ### Collaboration
 ---
