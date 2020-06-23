@@ -71,7 +71,7 @@ The second way, which is great for higher volume VSOs, is the bulk status method
 
 ### Storing your API key
 ---
-These scripts makes no assumptions about HOW YOU store your API key. For these examples you can plug and play, but please note, whenever you go live, the VA Lighthouse API team WILL want you to demo your app. **If your API key is not stored SAFELY AND SECURE THEY WILL NOT GIVE YOU ACCESS TO PRODUCTION.***
+These scripts make no assumptions about HOW YOU store your API key. For these examples you can plug and play, but please note, whenever you go live, the VA Lighthouse API team WILL want you to demo your app. **If your API key is not stored SAFELY AND SECURE THEY WILL NOT GIVE YOU ACCESS TO PRODUCTION.***
 
 ### Links to resources used in this project
 ---
