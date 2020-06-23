@@ -18,22 +18,22 @@ Our team is responsible for software development and support for the [County](ht
 
 ### About the VA Lighthouse API
 ---
-The VA Lighthouse API is a way for Local Governments and Veteran Services Offices to upload documents to the VA digitally as opposed to other options, such as fax. The API also allows for better status tracking as uploaded packets make their way through the system.
+The VA Lighthouse API is a way for Local Governments and Veteran Services Offices to digitally upload as opposed to other options, such as fax. The API also allows for better status tracking in real time as uploaded packets make their way through the system.
 
 The documentation for interacting with the API can be found [here](https://developer.va.gov/explore/benefits/docs/benefits?version=current)
 
-We recently rolled out integration software with the VA Lighthouse API for our VSO and wanted to share an Open Source example of how to integrate with the VA API.
+We recently rolled out integration software with the VA Lighthouse API(Benefits Intake) for our VSO and wanted to share an Open Source example of how to integrate with the VA API.
 
 ### How this setup is different from our setup
 ---
 This setup is somewhat different than our internal application, here are the main differences
 
-+ This setup uses a minimal CSS framework called Spectre and Vanilla Javascript on the front end and PHP on the back end. Our setup uses VueJS and Vuetify on the frontend, and PHP on the back end.
++ This setup uses a minimal CSS framework called Spectre CSS and Vanilla Javascript on the front end and PHP on the back end. Our setup uses VueJS and Vuetify on the frontend, and PHP on the back end.
 + This setup uses Python to grab the packet statuses. Our implementation uses Laserfiche and Laserfiche workflow to grab the statuses every 2 hours and web access gives the end user a view into Laserfiche.
 + This setup uses text files for status change tracking, our implementation uses a database.
 + Our form input is validated according to the specs under the VA Lighthouse Documentation.
 
-The reason for these differences is simple, We wanted to build a lightweight, open source application that you could pull down, throw on a server with PHP/Python installed, and start experimenting with right away and view all the VA API calls and how they work. **THIS IS NOT MEANT TO BE A PRODUCTION APP**, but rather, a way for you to lay the ground work FOR a production app and give you straight examples of how you can start integrating with the VA API out of the box.
+The reason for these differences is simple, We wanted to build a lightweight, open source application that you could pull down, throw on a server with PHP/Python installed, and start experimenting with right away. **THIS IS NOT MEANT TO BE A PRODUCTION APP**, but rather, a way for you to lay the ground work FOR a production app and give you lightweight examples of interacting with VA Lighthouse API.
 
 ### Getting started
 ---
@@ -41,18 +41,16 @@ To get started using this application, you'll need ensure a few things.
 
 1. Be sure that you have a web server that has PHP installed. If you want to pull statuses back after upload, be sure Python is installed as well.
 2. Be sure that PHP cURL has been properly setup and configured to handle HTTPS calls.
-3. Be sure you have a method setup for retrieving your API key. Most of these examples you can plug and play for dev/test purposes, but please take note of the warning at the bottom.
+3. Be sure you have a secure method setup for retrieving/storing your API key. Most of these examples you can plug and play for dev/test purposes, but please take note of the warning at the bottom.
 4. Be sure the Python scripts point to the path that "FILES_IN_CIRCULATION" exists.
 
 ### Front end
 ---
 Once you pull down all the files you will see an index.html file. The index.html file is the main front end file and is setup as a single page application with two pages(div tags). The first div tag is a file uploader. The second div tag is a table that has all GUIDS and statuses in circulation contained in a table.
 
-The front end uses axios.js and AJAX calls the complete it's transactions. 
+The first page, as mentioned,is uploading a file to the VA. The front end for this is a form with a main file upload and the ability to create more file uploads via the "Add Attachment Button". We do validate main file types and attachments to be sure their PDFs, but ultimately, pattern matching for fields is left to your discretion. For more information on input validation in the API, please review to the VA Lighthouse API documentation.
 
-The first transaction it handles is uploading a file to the VA. The front end for this is a form with a main file upload and the ability to create more file uploads via the "Add Attachment Button". We did leave out form input validation because different people perfer different methods of validation and may vary depending on frameworks used. We do however do file validation to ensure all files uploaded are PDFs. For instructions and proper validation for each field, please refer to the VA Lighthouse API documentation.
-
-The second transaction it handles is generating a table that contains all Veteran First Name, GUID, and VA Status.
+The second page is a table that is generated in code by data recieved from a back end web service. It contains 
 
 
 ### Back end web services
