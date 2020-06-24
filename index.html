@@ -276,11 +276,11 @@
 
                 //REINDEXES ALL ATTACHMENT ATTRIBUTES
 
-                let attachmentCounterForElements = 1
-
                 const fileAttachmentElements = document.getElementsByClassName('attachmentDOMDIV')
 
-                for (var i = 0; i < fileAttachmentElements.length; i++) {
+                for (let i = 0; i < fileAttachmentElements.length; i++) {
+
+                    const attachmentCounterForElements = i + 1
 
                     //SETS THE MAIN DIV ATTRIBUTES
 
@@ -305,10 +305,6 @@
 
                     attachmentRemoveButton = fileAttachmentElements[i].getElementsByClassName("attachmentRemoveButton")[0]
                     attachmentRemoveButton.dataset.removenumber = attachmentCounterForElements
-
-                    attachmentCounterForElements = attachmentCounterForElements + 1
-
-
 
                 }
 
